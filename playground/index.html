@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Quality Analysis System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: #ffffff;
+            color: #000000;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0;
+            background: #ffffff;
+            padding: 60px 80px;
+            min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .header-content {
+            flex: 1;
+        }
+        h1 {
+            color: #000000;
+            margin-bottom: 8px;
+            font-size: 42px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .back-btn {
+            padding: 16px 32px;
+            font-size: 13px;
+            border: 1px solid #000;
+            cursor: pointer;
+            background: #fff;
+            color: #000;
+            transition: all 0.2s;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .back-btn:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+        .info-banner {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            padding: 20px 30px;
+            margin-bottom: 50px;
+            color: #666;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+        .main-content {
+            display: grid;
+            grid-template-columns: 500px 1fr;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .control-panel {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 40px;
+        }
+        .panel-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 30px;
+            font-weight: 300;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .slider-group {
+            margin-bottom: 35px;
+        }
+        .slider-group:last-child {
+            margin-bottom: 0;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+        }
+        .slider-label {
+            font-size: 13px;
+            color: #000;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .slider-value {
+            font-size: 24px;
+            color: #000;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+        }
+        .slider-unit {
+            font-size: 11px;
+            color: #888;
+            margin-left: 4px;
+        }
+        .slider-range {
+            font-size: 10px;
+            color: #888;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 10px 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #000;
+            cursor: pointer;
+            border-radius: 0;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #000;
+            cursor: pointer;
+            border-radius: 0;
+            border: none;
+        }
+        .analyze-btn {
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 14px;
+            border: 2px solid #000;
+            cursor: pointer;
+            background: #000;
+            color: #fff;
+            transition: all 0.3s;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        .analyze-btn:hover:not(:disabled) {
+            background: #fff;
+            color: #000;
+            transform: translateY(-2px);
+        }
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .analyze-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        .results-panel {
+            background: #000;
+            color: #fff;
+            padding: 40px;
+            height: fit-content;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .loading-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            gap: 30px;
+        }
+        .loading-state.active {
+            display: flex;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #333;
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #888;
+        }
+        .loading-subtext {
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: #666;
+            text-align: center;
+            max-width: 300px;
+        }
+        .results-content {
+            display: none;
+        }
+        .results-content.active {
+            display: block;
+        }
+        .result-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #333;
+        }
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .result-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .result-value {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+        .result-description {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+        .quality-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        .quality-excellent { color: #4ade80; border-color: #4ade80; }
+        .quality-good { color: #86efac; border-color: #86efac; }
+        .quality-moderate { color: #fbbf24; border-color: #fbbf24; }
+        .quality-poor { color: #fb923c; border-color: #fb923c; }
+        .quality-very-poor { color: #ef4444; border-color: #ef4444; }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: #333;
+            border: 2px solid #333;
+        }
+        .metric-card {
+            background: #000;
+            padding: 25px 15px;
+            text-align: center;
+        }
+        .metric-card-value {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+        .metric-card-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .status-analyzing {
+            background: #fbbf24;
+        }
+        .status-processing {
+            background: #60a5fa;
+        }
+        .status-finalizing {
+            background: #4ade80;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>WATER QUALITY ANALYSIS</h1>
+                <p class="subtitle">Advanced Neural Network Processing System</p>
+            </div>
+            <a href="/" class="back-btn">Back to Dashboard</a>
+        </div>
+
+        <div class="info-banner">
+            <strong>ML-POWERED ANALYSIS ENGINE</strong> — Configure environmental parameters and initiate neural network analysis. System processes multi-dimensional data using trained models for comprehensive water quality assessment.
+        </div>
+
+        <div class="main-content">
+            <div class="left-column">
+                <div class="control-panel">
+                    <div class="panel-title">Input Parameters</div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">pH Level</span>
+                            <span class="slider-value" id="phValue">7.0<span class="slider-unit"></span></span>
+                        </div>
+                        <input type="range" id="phSlider" min="0" max="14" step="0.1" value="7.0">
+                        <div class="slider-range">Range: 0.0 - 14.0</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Dissolved Oxygen (DO)</span>
+                            <span class="slider-value" id="doValue">7.0<span class="slider-unit">mg/L</span></span>
+                        </div>
+                        <input type="range" id="doSlider" min="0" max="15" step="0.1" value="7.0">
+                        <div class="slider-range">Range: 0.0 - 15.0 mg/L</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Biological Oxygen Demand (BOD)</span>
+                            <span class="slider-value" id="bodValue">3.0<span class="slider-unit">mg/L</span></span>
+                        </div>
+                        <input type="range" id="bodSlider" min="0" max="30" step="0.1" value="3.0">
+                        <div class="slider-range">Range: 0.0 - 30.0 mg/L</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Electrical Conductivity (EC)</span>
+                            <span class="slider-value" id="ecValue">400<span class="slider-unit">µS/cm</span></span>
+                        </div>
+                        <input type="range" id="ecSlider" min="0" max="3000" step="10" value="400">
+                        <div class="slider-range">Range: 0 - 3000 µS/cm</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Temperature</span>
+                            <span class="slider-value" id="tempValue">25<span class="slider-unit">°C</span></span>
+                        </div>
+                        <input type="range" id="tempSlider" min="-5" max="45" step="0.5" value="25">
+                        <div class="slider-range">Range: -5 - 45 °C</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Humidity</span>
+                            <span class="slider-value" id="humidityValue">60<span class="slider-unit">%</span></span>
+                        </div>
+                        <input type="range" id="humiditySlider" min="0" max="100" step="1" value="60">
+                        <div class="slider-range">Range: 0 - 100 %</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Air Quality Index (AQI)</span>
+                            <span class="slider-value" id="aqiValue">50<span class="slider-unit"></span></span>
+                        </div>
+                        <input type="range" id="aqiSlider" min="0" max="500" step="5" value="50">
+                        <div class="slider-range">Range: 0 - 500</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Atmospheric Pressure</span>
+                            <span class="slider-value" id="pressureValue">1013<span class="slider-unit">hPa</span></span>
+                        </div>
+                        <input type="range" id="pressureSlider" min="950" max="1050" step="1" value="1013">
+                        <div class="slider-range">Range: 950 - 1050 hPa</div>
+                    </div>
+
+                    <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
+                        Initialize Analysis
+                    </button>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="results-panel">
+                    <div class="loading-state" id="loadingState">
+                        <div class="spinner"></div>
+                        <div class="loading-text" id="loadingText">
+                            <span class="status-indicator status-analyzing"></span>INITIALIZING NEURAL NETWORK
+                        </div>
+                        <div class="loading-subtext" id="loadingSubtext">
+                            Preparing computational environment
+                        </div>
+                    </div>
+
+                    <div class="results-content" id="resultsContent">
+                        <div class="panel-title" style="color: #888; border-color: #333;">Analysis Output</div>
+                        
+                        <div class="result-item">
+                            <div class="result-label">Water Quality Assessment</div>
+                            <div class="result-value" id="overallQuality">Excellent</div>
+                            <div class="quality-badge quality-excellent" id="qualityBadge">SAFE FOR CONSUMPTION</div>
+                            <div class="result-description" id="qualityDescription">
+                                All parameters within optimal ranges for safe consumption and aquatic life.
+                            </div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Composite Quality Index</div>
+                            <div class="result-value" id="wqiValue">95.0</div>
+                            <div class="result-description">
+                                Multi-parameter weighted analysis score (0-100 scale)
+                            </div>
+                        </div>
+
+                        <div class="result-item" style="border: none; padding-bottom: 0;">
+                            <div class="result-label">Parameter Confidence Scores</div>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-card-value" id="phScore">100</div>
+                                    <div class="metric-card-label">pH Score</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-card-value" id="doScore">100</div>
+                                    <div class="metric-card-label">DO Score</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-card-value" id="bodScore">100</div>
+                                    <div class="metric-card-label">BOD Score</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-card-value" id="ecScore">100</div>
+                                    <div class="metric-card-label">EC Score</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const phSlider = document.getElementById('phSlider');
+        const doSlider = document.getElementById('doSlider');
+        const bodSlider = document.getElementById('bodSlider');
+        const ecSlider = document.getElementById('ecSlider');
+        const tempSlider = document.getElementById('tempSlider');
+        const humiditySlider = document.getElementById('humiditySlider');
+        const aqiSlider = document.getElementById('aqiSlider');
+        const pressureSlider = document.getElementById('pressureSlider');
+
+        const phValue = document.getElementById('phValue');
+        const doValue = document.getElementById('doValue');
+        const bodValue = document.getElementById('bodValue');
+        const ecValue = document.getElementById('ecValue');
+        const tempValue = document.getElementById('tempValue');
+        const humidityValue = document.getElementById('humidityValue');
+        const aqiValue = document.getElementById('aqiValue');
+        const pressureValue = document.getElementById('pressureValue');
+
+        const loadingStates = [
+            { text: 'INITIALIZING NEURAL NETWORK', subtext: 'Preparing computational environment', class: 'status-analyzing', duration: 1200 },
+            { text: 'LOADING TRAINED MODELS', subtext: 'Accessing water quality prediction models', class: 'status-analyzing', duration: 1500 },
+            { text: 'PROCESSING INPUT VECTORS', subtext: 'Normalizing parameter data', class: 'status-processing', duration: 1800 },
+            { text: 'RUNNING FEATURE EXTRACTION', subtext: 'Analyzing multi-dimensional correlations', class: 'status-processing', duration: 1600 },
+            { text: 'APPLYING GRADIENT DESCENT', subtext: 'Optimizing prediction accuracy', class: 'status-processing', duration: 1400 },
+            { text: 'COMPUTING CONFIDENCE INTERVALS', subtext: 'Calculating statistical significance', class: 'status-finalizing', duration: 1300 },
+            { text: 'FINALIZING PREDICTIONS', subtext: 'Generating comprehensive report', class: 'status-finalizing', duration: 1200 }
+        ];
+
+        function updateSliderDisplay(slider, displayElement, decimals, unit) {
+            const value = parseFloat(slider.value);
+            displayElement.innerHTML = `${value.toFixed(decimals)}<span class="slider-unit">${unit}</span>`;
+        }
+
+        phSlider.addEventListener('input', () => updateSliderDisplay(phSlider, phValue, 1, ''));
+        doSlider.addEventListener('input', () => updateSliderDisplay(doSlider, doValue, 1, 'mg/L'));
+        bodSlider.addEventListener('input', () => updateSliderDisplay(bodSlider, bodValue, 1, 'mg/L'));
+        ecSlider.addEventListener('input', () => updateSliderDisplay(ecSlider, ecValue, 0, 'µS/cm'));
+        tempSlider.addEventListener('input', () => updateSliderDisplay(tempSlider, tempValue, 1, '°C'));
+        humiditySlider.addEventListener('input', () => updateSliderDisplay(humiditySlider, humidityValue, 0, '%'));
+        aqiSlider.addEventListener('input', () => updateSliderDisplay(aqiSlider, aqiValue, 0, ''));
+        pressureSlider.addEventListener('input', () => updateSliderDisplay(pressureSlider, pressureValue, 0, 'hPa'));
+
+        function calculatePHScore(ph) {
+            if (ph >= 7.0 && ph <= 7.5) return 100;
+            if (ph >= 6.5 && ph <= 8.5) return 90;
+            if (ph >= 6.0 && ph <= 9.0) return 70;
+            if (ph >= 5.0 && ph <= 10.0) return 40;
+            return 20;
+        }
+
+        function calculateDOScore(doValue) {
+            if (doValue >= 8.0) return 100;
+            if (doValue >= 6.0) return 90;
+            if (doValue >= 4.0) return 60;
+            if (doValue >= 2.0) return 30;
+            return 10;
+        }
+
+        function calculateBODScore(bod) {
+            if (bod < 1.0) return 100;
+            if (bod <= 3.0) return 90;
+            if (bod <= 5.0) return 65;
+            if (bod <= 10.0) return 35;
+            return 15;
+        }
+
+        function calculateECScore(ec) {
+            if (ec < 300) return 100;
+            if (ec <= 500) return 90;
+            if (ec <= 1000) return 65;
+            if (ec <= 2000) return 35;
+            return 15;
+        }
+
+        function calculateWQI(phScore, doScore, bodScore, ecScore) {
+            const wqi = (phScore * 0.25) + (doScore * 0.30) + (bodScore * 0.25) + (ecScore * 0.20);
+            return Math.round(wqi * 10) / 10;
+        }
+
+        function getQualityCategory(wqi) {
+            if (wqi >= 90) return {
+                category: 'Excellent',
+                badge: 'SAFE FOR CONSUMPTION',
+                badgeClass: 'quality-excellent',
+                description: 'All parameters within optimal ranges for safe consumption and aquatic life.'
+            };
+            if (wqi >= 70) return {
+                category: 'Good',
+                badge: 'SAFE WITH MONITORING',
+                badgeClass: 'quality-good',
+                description: 'Water quality is good and generally safe. Minor treatment may be beneficial.'
+            };
+            if (wqi >= 50) return {
+                category: 'Moderate',
+                badge: 'TREATMENT RECOMMENDED',
+                badgeClass: 'quality-moderate',
+                description: 'Water quality is moderate. Treatment recommended before consumption.'
+            };
+            if (wqi >= 30) return {
+                category: 'Poor',
+                badge: 'TREATMENT REQUIRED',
+                badgeClass: 'quality-poor',
+                description: 'Water quality is poor. Advanced treatment required before any use.'
+            };
+            return {
+                category: 'Very Poor',
+                badge: 'UNSAFE - DO NOT USE',
+                badgeClass: 'quality-very-poor',
+                description: 'Water quality is very poor and unsafe for consumption or most uses.'
+            };
+        }
+
+        async function runAnalysis() {
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadingState = document.getElementById('loadingState');
+            const resultsContent = document.getElementById('resultsContent');
+            const loadingText = document.getElementById('loadingText');
+            const loadingSubtext = document.getElementById('loadingSubtext');
+
+            analyzeBtn.disabled = true;
+            resultsContent.classList.remove('active');
+            loadingState.classList.add('active');
+
+            for (let i = 0; i < loadingStates.length; i++) {
+                const state = loadingStates[i];
+                loadingText.innerHTML = `<span class="status-indicator ${state.class}"></span>${state.text}`;
+                loadingSubtext.textContent = state.subtext;
+                await new Promise(resolve => setTimeout(resolve, state.duration));
+            }
+
+            const ph = parseFloat(phSlider.value);
+            const doVal = parseFloat(doSlider.value);
+            const bod = parseFloat(bodSlider.value);
+            const ec = parseFloat(ecSlider.value);
+
+            const phScore = calculatePHScore(ph);
+            const doScore = calculateDOScore(doVal);
+            const bodScore = calculateBODScore(bod);
+            const ecScore = calculateECScore(ec);
+
+            document.getElementById('phScore').textContent = phScore;
+            document.getElementById('doScore').textContent = doScore;
+            document.getElementById('bodScore').textContent = bodScore;
+            document.getElementById('ecScore').textContent = ecScore;
+
+            const wqi = calculateWQI(phScore, doScore, bodScore, ecScore);
+            document.getElementById('wqiValue').textContent = wqi.toFixed(1);
+
+            const quality = getQualityCategory(wqi);
+            document.getElementById('overallQuality').textContent = quality.category;
+            document.getElementById('qualityDescription').textContent = quality.description;
+            
+            const badge = document.getElementById('qualityBadge');
+            badge.textContent = quality.badge;
+            badge.className = 'quality-badge ' + quality.badgeClass;
+
+            loadingState.classList.remove('active');
+            resultsContent.classList.add('active');
+            analyzeBtn.disabled = false;
+        }
+    </script>
+</body>
+</html>
