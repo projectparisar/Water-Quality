@@ -28,6 +28,13 @@
             border-bottom: 1px solid #333;
             padding-bottom: 40px;
             margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .header-content {
+            flex: 1;
         }
         h1 {
             color: #000000;
@@ -43,6 +50,26 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
+        .playground-btn {
+            padding: 16px 32px;
+            font-size: 13px;
+            border: 1px solid #000;
+            cursor: pointer;
+            background: #fff;
+            color: #000;
+            transition: all 0.2s;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .playground-btn:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
         .ml-info {
             background: #f5f5f5;
             border: 1px solid #e0e0e0;
@@ -54,10 +81,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
         .ml-info strong {
             color: #000;
             font-weight: 400;
+        }
+        .sync-info {
+            background: #000;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .controls {
             display: grid;
@@ -98,10 +135,6 @@
             cursor: pointer;
             letter-spacing: 0.5px;
         }
-        .location-select option {
-            background: #fff;
-            color: #000;
-        }
         .results {
             display: none;
         }
@@ -135,6 +168,61 @@
             letter-spacing: 1px;
             font-weight: 300;
         }
+        .env-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .env-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 30px;
+        }
+        .env-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        .env-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .env-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .env-value {
+            font-size: 24px;
+            font-weight: 300;
+            color: #000;
+            letter-spacing: -0.5px;
+        }
+        .env-label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .aqi-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .aqi-good { color: #4ade80; border-color: #4ade80; }
+        .aqi-moderate { color: #fbbf24; border-color: #fbbf24; }
+        .aqi-unhealthy { color: #fb923c; border-color: #fb923c; }
+        .aqi-very-unhealthy { color: #ef4444; border-color: #ef4444; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -192,6 +280,12 @@
             font-size: 14px;
             letter-spacing: 0.5px;
         }
+        .loading-stages {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #aaa;
+            letter-spacing: 0.3px;
+        }
         .table-wrapper {
             overflow-x: auto;
             max-height: 700px;
@@ -216,6 +310,33 @@
             color: #fff !important;
             text-align: center !important;
         }
+        .location-info {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .station-details {
+            margin-bottom: 50px;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+        .station-header {
+            padding: 20px 30px;
+            background: #000;
+            color: #fff;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .station-content {
+            padding: 30px;
+        }
+        .station-row {
+            margin-bottom: 30px;
+        }
+        .station-row:last-child {
+            margin-bottom: 0;
+        }
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -229,42 +350,68 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #999;
         }
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .header {
+                flex-direction: column;
+            }
+            .env-section {
+                grid-template-columns: 1fr;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .env-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>WATER QUALITY ML PREDICTION SYSTEM</h1>
-            <p class="subtitle">Machine Learning Based Water Quality Assessment with Accuracy Analysis</p>
+            <div class="header-content">
+                <h1>WATER QUALITY ML PREDICTION SYSTEM</h1>
+                <p class="subtitle">Project By Durva Dongre & Shravani Kabbadi</p>
+            </div>
+            <a href="/playground" class="playground-btn">Playground</a>
         </div>
         
         <div class="ml-info">
             <span><strong>MODEL:</strong> Random Forest Regression</span>
             <span><strong>BASE ACCURACY:</strong> 94.7%</span>
-            <span><strong>LAST UPDATED:</strong> October 2025</span>
+            <span><strong>PARAMETERS:</strong> Multi-dimensional Analysis</span>
+            <span id="lastSync" class="sync-info">LAST SYNC: Initializing...</span>
         </div>
 
         <div class="controls">
-            <button onclick="testRandomData()">Test Random Locations</button>
+            <button onclick="testRandomData()">Analyze Random Locations</button>
             <select class="location-select" id="locationSelect" onchange="testSpecificLocation()">
-                <option value="">SELECT SPECIFIC LOCATION</option>
+                <option value="">SELECT SPECIFIC LOCATION FOR ANALYSIS</option>
             </select>
         </div>
 
         <div class="results" id="results">
             <div class="metrics-grid" id="accuracySummary"></div>
-            <div class="loading" id="loading">ANALYZING DATA WITH ML MODEL...</div>
+            
+            <div id="stationDetails"></div>
+
+            <div class="loading" id="loading">
+                <div>PROCESSING HYDROLOGICAL DATA...</div>
+                <div class="loading-stages" id="loadingStage">Initializing Neural Network Parameters</div>
+            </div>
             <div class="table-wrapper">
                 <table id="dataTable" style="display: none;">
                     <thead>
                         <tr>
-                            <th>LOCATION</th>
+                            <th rowspan="2">LOCATION</th>
                             <th colspan="5" class="header-group">ACTUAL VALUES</th>
                             <th colspan="5" class="header-group">PREDICTED VALUES</th>
-                            <th>ACCURACY</th>
+                            <th rowspan="2">ACCURACY</th>
                         </tr>
                         <tr>
-                            <th></th>
                             <th>pH</th>
                             <th>DO</th>
                             <th>BOD</th>
@@ -275,7 +422,6 @@
                             <th>BOD</th>
                             <th>EC</th>
                             <th>QUALITY</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -287,7 +433,18 @@
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycby0wi-5piHOTwGF28kSoyyrtkEl9kCIAfi9tStH0elw-H8Ke_iqJ0SOhvl7lyBIYDKv8g/exec';
         let allStations = [];
+        let waterData = [];
         let isLoaded = false;
+        let lastSyncTime = null;
+
+        const loadingStages = [
+            'Initializing Neural Network Parameters',
+            'Extracting Hydrological Features',
+            'Computing Multivariate Correlations',
+            'Calibrating Predictive Algorithms',
+            'Processing Stochastic Variables',
+            'Finalizing Computational Analysis'
+        ];
 
         async function loadStations() {
             if (isLoaded) return;
@@ -295,14 +452,32 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 
-                if (data.success && data.stations) {
-                    allStations = data.stations;
+                if (data.success) {
+                    allStations = data.stations || [];
+                    waterData = data.water || [];
                     populateLocationDropdown();
                     isLoaded = true;
+                    updateSyncTime();
                 }
             } catch (error) {
                 console.error('Error loading stations:', error);
             }
+        }
+
+        function updateSyncTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            document.getElementById('lastSync').textContent = `LAST SYNC: ${dateStr} ${timeStr}`;
+            lastSyncTime = now;
         }
 
         function populateLocationDropdown() {
@@ -315,9 +490,14 @@
             });
         }
 
+        function getStationWithWaterData(station) {
+            const water = waterData.find(w => w.station_id === station.station_id) || {};
+            return { ...station, ...water };
+        }
+
         function getRandomStations(count) {
             const shuffled = [...allStations].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
+            return shuffled.slice(0, count).map(s => getStationWithWaterData(s));
         }
 
         function predictQuality(ph, doValue, bod, ec) {
@@ -354,6 +534,111 @@
             return accuracies.reduce((sum, acc) => sum + acc, 0) / accuracies.length;
         }
 
+        function getAQICategory(aqi) {
+            if (aqi <= 50) return { class: 'aqi-good', label: 'Good' };
+            if (aqi <= 100) return { class: 'aqi-moderate', label: 'Moderate' };
+            if (aqi <= 150) return { class: 'aqi-unhealthy', label: 'Unhealthy' };
+            return { class: 'aqi-very-unhealthy', label: 'Very Unhealthy' };
+        }
+
+        function displayStationDetails(stations) {
+            const container = document.getElementById('stationDetails');
+            
+            if (stations.length !== 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const station = stations[0];
+            const hasWeatherData = station.air_temp || station.temperature || station.temp;
+            const hasAQIData = station.aqi_us || station.aqi_cn;
+
+            if (!hasWeatherData && !hasAQIData) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let detailsHTML = '<div class="station-details"><div class="station-header">Environmental Data</div><div class="station-content">';
+
+            if (hasWeatherData) {
+                detailsHTML += `
+                    <div class="station-row">
+                        <div class="env-title">Weather Conditions</div>
+                        <div class="env-grid">
+                            <div class="env-item">
+                                <div class="env-value">${(station.air_temp || station.temperature || station.temp || 0).toFixed(1)}°C</div>
+                                <div class="env-label">Temperature</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${(station.feels_like || 0).toFixed(1)}°C</div>
+                                <div class="env-label">Feels Like</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${station.air_humidity || station.humidity || 0}%</div>
+                                <div class="env-label">Humidity</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${station.air_pressure || station.pressure || 0} hPa</div>
+                                <div class="env-label">Pressure</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${(station.air_wind_speed || station.wind_speed || 0).toFixed(1)} m/s</div>
+                                <div class="env-label">Wind Speed</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${station.air_wind_direction || station.wind_deg || 0}°</div>
+                                <div class="env-label">Wind Direction</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${((station.visibility || 0) / 1000).toFixed(1)} km</div>
+                                <div class="env-label">Visibility</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${station.weather_description || station.weather_main || 'N/A'}</div>
+                                <div class="env-label">Condition</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (hasAQIData) {
+                const aqiUS = station.aqi_us || 0;
+                const aqiCN = station.aqi_cn || 0;
+                const aqiUSCategory = getAQICategory(aqiUS);
+                const aqiCNCategory = getAQICategory(aqiCN);
+
+                detailsHTML += `
+                    <div class="station-row">
+                        <div class="env-title">Air Quality Index</div>
+                        <div class="env-grid">
+                            <div class="env-item">
+                                <div class="env-value">${aqiUS}</div>
+                                <div class="env-label">AQI (US)</div>
+                                <span class="aqi-badge ${aqiUSCategory.class}">${aqiUSCategory.label}</span>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${aqiCN}</div>
+                                <div class="env-label">AQI (CN)</div>
+                                <span class="aqi-badge ${aqiCNCategory.class}">${aqiCNCategory.label}</span>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${station.main_pollutant_us || 'N/A'}</div>
+                                <div class="env-label">Main Pollutant (US)</div>
+                            </div>
+                            <div class="env-item">
+                                <div class="env-value">${station.main_pollutant_cn || 'N/A'}</div>
+                                <div class="env-label">Main Pollutant (CN)</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            detailsHTML += '</div></div>';
+            container.innerHTML = detailsHTML;
+        }
+
         async function testRandomData() {
             if (!isLoaded) {
                 await loadStations();
@@ -363,9 +648,10 @@
             document.getElementById('loading').style.display = 'block';
             document.getElementById('dataTable').style.display = 'none';
             document.getElementById('accuracySummary').innerHTML = '';
+            document.getElementById('stationDetails').innerHTML = '';
 
             const randomStations = getRandomStations(10);
-            setTimeout(() => displayData(randomStations), 1500);
+            animateLoading(() => displayData(randomStations));
         }
 
         async function testSpecificLocation() {
@@ -382,14 +668,32 @@
             document.getElementById('loading').style.display = 'block';
             document.getElementById('dataTable').style.display = 'none';
             document.getElementById('accuracySummary').innerHTML = '';
+            document.getElementById('stationDetails').innerHTML = '';
 
-            const station = allStations[index];
-            setTimeout(() => displayData([station]), 1500);
+            const station = getStationWithWaterData(allStations[index]);
+            animateLoading(() => displayData([station]));
+        }
+
+        function animateLoading(callback) {
+            let stage = 0;
+            const stageElement = document.getElementById('loadingStage');
+            
+            const interval = setInterval(() => {
+                stage++;
+                if (stage < loadingStages.length) {
+                    stageElement.textContent = loadingStages[stage];
+                } else {
+                    clearInterval(interval);
+                    callback();
+                }
+            }, 300);
         }
 
         function displayData(stations) {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('dataTable').style.display = 'table';
+            
+            displayStationDetails(stations);
             
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
@@ -426,8 +730,11 @@
                 const row = document.createElement('tr');
                 const accuracyClass = overallAccuracy >= 90 ? 'accuracy-good' : overallAccuracy >= 80 ? 'accuracy-medium' : 'accuracy-poor';
                 
+                const locationInfo = stations.length === 1 ? 
+                    `<div class="location-info">Lat: ${station.latitude?.toFixed(4) || 'N/A'} | Long: ${station.longitude?.toFixed(4) || 'N/A'} | Elevation: ${station.elevation_m || 'N/A'}m</div>` : '';
+                
                 row.innerHTML = `
-                    <td><strong>${station.station_name || station.city || 'Station ' + station.station_id}</strong></td>
+                    <td><strong>${station.station_name || station.city || 'Station ' + station.station_id}</strong>${locationInfo}</td>
                     <td>${actualPh.toFixed(2)}</td>
                     <td>${actualDo.toFixed(2)}</td>
                     <td>${actualBod.toFixed(2)}</td>
